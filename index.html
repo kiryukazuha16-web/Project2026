@@ -299,6 +299,7 @@ button:hover {
         padding: 14px 28px;
     }
 }
+
 </style>
 </head>
 
@@ -321,11 +322,6 @@ button:hover {
             <span id="musicStatus">PLAY MUSIC</span>
         </div>
     </div>
-
-    <audio id="backgroundMusic" loop preload="auto">
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
-
 </div>
 
 <div class="overlay"></div>
@@ -358,8 +354,43 @@ button:hover {
 
     </div>
 </div>
+<audio id="backgroundMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
+const music = document.getElementById("backgroundMusic");
+const vinyl = document.getElementById("vinyl");
+const musicBtn = document.getElementById("musicBtn");
+const musicStatus = document.getElementById("musicStatus");
+
+async function toggleMusic() {
+    if (music.paused) {
+        try {
+            await music.play();
+
+            vinyl.classList.add("playing");
+            musicBtn.innerHTML = "Ⅱ";
+            musicStatus.innerHTML = "NOW PLAYING";
+
+        } catch (error) {
+            console.error("Audio error:", error);
+            musicStatus.innerHTML = "AUDIO ERROR";
+            alert("Musik gagal diputar. Periksa file music.mp3 kamu.");
+        }
+
+    } else {
+        music.pause();
+
+        vinyl.classList.remove("playing");
+        musicBtn.innerHTML = "▶";
+        musicStatus.innerHTML = "PAUSED";
+    }
+}
+
+music.addEventListener("ended", () => {
+    vinyl.classList.remove("playing");
+});
 // Membuat animasi salju
 function createSnow() {
     const snow = document.createElement("div");
